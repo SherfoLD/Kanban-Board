@@ -2,6 +2,20 @@
 
 class BoardRepository
 {
+    private static $instance;
+
+    private function __construct()
+    {
+    }
+
+    public static function getInstance(): BoardRepository
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     public function save(BoardEntity $boardEntity)
     {
         if ($boardEntity->getId() != null) {
@@ -28,7 +42,7 @@ class BoardRepository
         }
     }
 
-    public function findById($id)
+    public function findById($id): BoardEntity
     {
         $result = pg_query_params(
             self::getConnection(),
@@ -54,7 +68,7 @@ class BoardRepository
         );
     }
 
-    public static function getConnection()
+    private static function getConnection()
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

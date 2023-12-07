@@ -2,6 +2,20 @@
 
 class ListRepository
 {
+    private static $instance;
+
+    private function __construct()
+    {
+    }
+
+    public static function getInstance(): ListRepository
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     public function save(ListEntity $listEntity)
     {
         if ($listEntity->getId() != null) {
@@ -32,7 +46,7 @@ class ListRepository
         }
     }
 
-    public function findById($id)
+    public function findById($id) : ListEntity
     {
         $result = pg_query_params(
             self::getConnection(),
@@ -60,7 +74,7 @@ class ListRepository
         );
     }
 
-    public static function getConnection()
+    private static function getConnection()
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

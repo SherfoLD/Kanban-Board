@@ -2,6 +2,20 @@
 
 class TeamRepository
 {
+    private static $instance;
+
+    private function __construct()
+    {
+    }
+
+    public static function getInstance(): TeamRepository
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     public function save(TeamEntity $teamEntity)
     {
         if ($teamEntity->getId() != null) {
@@ -26,7 +40,7 @@ class TeamRepository
         }
     }
 
-    public function findById($id)
+    public function findById($id): TeamEntity
     {
         $result = pg_query_params(
             self::getConnection(),
@@ -51,7 +65,7 @@ class TeamRepository
         );
     }
 
-    public static function getConnection()
+    private static function getConnection()
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

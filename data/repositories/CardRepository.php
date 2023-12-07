@@ -2,6 +2,20 @@
 
 class CardRepository
 {
+    private static $instance;
+
+    private function __construct()
+    {
+    }
+
+    public static function getInstance(): CardRepository
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     public function save(CardEntity $cardEntity)
     {
         if ($cardEntity->getId() != null) {
@@ -32,7 +46,7 @@ class CardRepository
         }
     }
 
-    public function findById($id)
+    public function findById($id): CardEntity
     {
         $result = pg_query_params(
             self::getConnection(),
@@ -60,7 +74,7 @@ class CardRepository
         );
     }
 
-    public static function getConnection()
+    private static function getConnection()
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

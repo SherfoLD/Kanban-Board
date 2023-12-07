@@ -1,15 +1,29 @@
 <?php
+require_once "../data/DatabaseConnection.php";
 
 class UserRepository
 {
+    private static $instance;
+
+    private function __construct()
+    {
+    }
+
+    public static function getInstance(): UserRepository
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     public function save(UserEntity $userEntity)
     {
         if ($userEntity->getId() != null) {
             return pg_query_params(
                 self::getConnection(),
-                "UPDATE user SET nickname = $1, email = $2, first_name = $3, last_name = $4, created_at = $5 WHERE id = $6",
+                "UPDATE \"user\" SET email = $1, first_name = $2, last_name = $3, created_at = $4 WHERE id = $5",
                 array(
-                    $userEntity->getNickname(),
                     $userEntity->getEmail(),
                     $userEntity->getFirstName(),
                     $userEntity->getLastName(),
@@ -21,9 +35,8 @@ class UserRepository
         } else {
             return pg_query_params(
                 self::getConnection(),
-                "INSERT INTO user(nickname, email, first_name, last_name, created_at) VALUES ($1, $2, $3, $4, $5)",
+                "INSERT INTO \"user\"(email, first_name, last_name, created_at) VALUES ($1, $2, $3, $4) RETURNING id",
                 array(
-                    $userEntity->getNickname(),
                     $userEntity->getEmail(),
                     $userEntity->getFirstName(),
                     $userEntity->getLastName(),
@@ -33,18 +46,17 @@ class UserRepository
         }
     }
 
-    public function findById($id)
+    public function findById($id): UserEntity
     {
         $result = pg_query_params(
             self::getConnection(),
-            "SELECT nickname, email, first_name, last_name, created_at FROM user WHERE id = $1",
+            "SELECT email, first_name, last_name, created_at FROM \"user\" WHERE id = $1",
             array($id)
         );
         $userData = pg_fetch_assoc($result);
 
         return new UserEntity(
             $id,
-            $userData['nickname'],
             $userData['email'],
             $userData['first_name'],
             $userData['last_name'],
@@ -56,12 +68,12 @@ class UserRepository
     {
         return pg_query_params(
             self::getConnection(),
-            "DELETE FROM user WHERE id = $1",
+            "DELETE FROM \"user\" WHERE id = $1",
             array($id)
         );
     }
 
-    public static function getConnection()
+    private function getConnection()
     {
         return DatabaseConnection::getInstance()->getConnection();
     }
