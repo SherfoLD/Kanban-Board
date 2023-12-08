@@ -1,22 +1,14 @@
 <?php
+require_once "../data/DatabaseConnection.php";
+require_once "../data/Singleton.php";
 
-class BoardRepository
+use PgSql\Result;
+use PgSql\Connection;
+
+class BoardRepository extends Singleton
 {
-    private static $instance;
 
-    private function __construct()
-    {
-    }
-
-    public static function getInstance(): BoardRepository
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public function save(BoardEntity $boardEntity)
+    public function save(BoardEntity $boardEntity): Result|false
     {
         if ($boardEntity->getId() != null) {
             return pg_query_params(
@@ -29,6 +21,7 @@ class BoardRepository
                     $boardEntity->getId()
                 )
             );
+
         } else {
             return pg_query_params(
                 self::getConnection(),
@@ -59,7 +52,7 @@ class BoardRepository
         );
     }
 
-    public function deleteById($id)
+    public function deleteById($id): Result|false
     {
         return pg_query_params(
             self::getConnection(),
@@ -68,7 +61,7 @@ class BoardRepository
         );
     }
 
-    private static function getConnection()
+    private static function getConnection(): Connection
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

@@ -1,23 +1,14 @@
 <?php
 require_once "../data/DatabaseConnection.php";
+require_once "../data/Singleton.php";
 
-class UserRepository
+use PgSql\Result;
+use PgSql\Connection;
+
+class UserRepository extends Singleton
 {
-    private static $instance;
 
-    private function __construct()
-    {
-    }
-
-    public static function getInstance(): UserRepository
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public function save(UserEntity $userEntity)
+    public function save(UserEntity $userEntity): Result|false
     {
         if ($userEntity->getId() != null) {
             return pg_query_params(
@@ -64,7 +55,7 @@ class UserRepository
         );
     }
 
-    public function deleteById($id)
+    public function deleteById($id): Result|false
     {
         return pg_query_params(
             self::getConnection(),
@@ -73,7 +64,7 @@ class UserRepository
         );
     }
 
-    private function getConnection()
+    private function getConnection(): false|Connection
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

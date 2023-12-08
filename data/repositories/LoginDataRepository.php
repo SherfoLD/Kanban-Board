@@ -1,23 +1,14 @@
 <?php
 require_once "../data/DatabaseConnection.php";
+require_once "../data/Singleton.php";
 
-class LoginDataRepository
+use PgSql\Result;
+use PgSql\Connection;
+
+class LoginDataRepository extends Singleton
 {
-    private static $instance;
 
-    private function __construct()
-    {
-    }
-
-    public static function getInstance(): LoginDataRepository
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public function save(LoginDataEntity $loginDataEntity)
+    public function save(LoginDataEntity $loginDataEntity): Result|false
     {
         if ($loginDataEntity->getId() != null) {
             return pg_query_params(
@@ -30,6 +21,7 @@ class LoginDataRepository
                     $loginDataEntity->getId()
                 )
             );
+
         } else {
             return pg_query_params(
                 self::getConnection(),
@@ -75,7 +67,7 @@ class LoginDataRepository
         return $loginData['user_id'];
     }
 
-    public function deleteById($id)
+    public function deleteById($id): Result|false
     {
         return pg_query_params(
             self::getConnection(),
@@ -84,7 +76,7 @@ class LoginDataRepository
         );
     }
 
-    private static function getConnection()
+    private static function getConnection(): Connection
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

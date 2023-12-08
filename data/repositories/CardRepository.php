@@ -1,22 +1,14 @@
 <?php
+require_once "../data/DatabaseConnection.php";
+require_once "../data/Singleton.php";
 
-class CardRepository
+use PgSql\Result;
+use PgSql\Connection;
+
+class CardRepository extends Singleton
 {
-    private static $instance;
 
-    private function __construct()
-    {
-    }
-
-    public static function getInstance(): CardRepository
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public function save(CardEntity $cardEntity)
+    public function save(CardEntity $cardEntity): Result|false
     {
         if ($cardEntity->getId() != null) {
             return pg_query_params(
@@ -31,6 +23,7 @@ class CardRepository
                     $cardEntity->getId()
                 )
             );
+
         } else {
             return pg_query_params(
                 self::getConnection(),
@@ -65,7 +58,7 @@ class CardRepository
         );
     }
 
-    public function deleteById($id)
+    public function deleteById($id): Result|false
     {
         return pg_query_params(
             self::getConnection(),
@@ -74,7 +67,7 @@ class CardRepository
         );
     }
 
-    private static function getConnection()
+    private static function getConnection(): Connection
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

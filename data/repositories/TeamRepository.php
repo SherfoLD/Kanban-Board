@@ -1,22 +1,14 @@
 <?php
+require_once "../data/DatabaseConnection.php";
+require_once "../data/Singleton.php";
 
-class TeamRepository
+use PgSql\Result;
+use PgSql\Connection;
+
+class TeamRepository extends Singleton
 {
-    private static $instance;
 
-    private function __construct()
-    {
-    }
-
-    public static function getInstance(): TeamRepository
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public function save(TeamEntity $teamEntity)
+    public function save(TeamEntity $teamEntity): Result|false
     {
         if ($teamEntity->getId() != null) {
             return pg_query_params(
@@ -28,6 +20,7 @@ class TeamRepository
                     $teamEntity->getId()
                 )
             );
+
         } else {
             return pg_query_params(
                 self::getConnection(),
@@ -56,7 +49,7 @@ class TeamRepository
         );
     }
 
-    public function deleteById($id)
+    public function deleteById($id): Result|false
     {
         return pg_query_params(
             self::getConnection(),
@@ -65,7 +58,7 @@ class TeamRepository
         );
     }
 
-    private static function getConnection()
+    private static function getConnection(): Connection
     {
         return DatabaseConnection::getInstance()->getConnection();
     }

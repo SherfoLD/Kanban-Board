@@ -1,22 +1,14 @@
 <?php
+require_once "../data/DatabaseConnection.php";
+require_once "../data/Singleton.php";
 
-class ListRepository
+use PgSql\Result;
+use PgSql\Connection;
+
+class ListRepository extends Singleton
 {
-    private static $instance;
 
-    private function __construct()
-    {
-    }
-
-    public static function getInstance(): ListRepository
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public function save(ListEntity $listEntity)
+    public function save(ListEntity $listEntity): Result|false
     {
         if ($listEntity->getId() != null) {
             return pg_query_params(
@@ -65,7 +57,7 @@ class ListRepository
         );
     }
 
-    public function deleteById($id)
+    public function deleteById($id): Result|false
     {
         return pg_query_params(
             self::getConnection(),
@@ -74,7 +66,7 @@ class ListRepository
         );
     }
 
-    private static function getConnection()
+    private static function getConnection(): Connection
     {
         return DatabaseConnection::getInstance()->getConnection();
     }
