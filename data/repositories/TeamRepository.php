@@ -1,12 +1,27 @@
 <?php
-require_once "../data/DatabaseConnection.php";
-require_once "../data/Singleton.php";
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/data/DatabaseConnection.php";
+require_once "$root/data/entities/TeamEntity.php";
 
 use PgSql\Result;
 use PgSql\Connection;
 
-class TeamRepository extends Singleton
+class TeamRepository
 {
+    private static self|null $instance = null;
+
+    final private function __construct()
+    {
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
 
     public function save(TeamEntity $teamEntity): Result|false
     {
@@ -24,7 +39,7 @@ class TeamRepository extends Singleton
         } else {
             return pg_query_params(
                 self::getConnection(),
-                "INSERT INTO team(name, created_at) VALUES ($1, $2)",
+                "INSERT INTO team(name, created_at) VALUES ($1, $2) RETURNING id",
                 array(
                     $teamEntity->getName(),
                     $teamEntity->getCreatedAt()

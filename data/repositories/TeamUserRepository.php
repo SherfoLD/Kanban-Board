@@ -1,12 +1,27 @@
 <?php
-require_once "../data/DatabaseConnection.php";
-require_once "../data/Singleton.php";
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/data/DatabaseConnection.php";
+require_once "$root/data/entities/TeamUserEntity.php";
 
 use PgSql\Result;
 use PgSql\Connection;
 
-class TeamUserRepository extends Singleton
+class TeamUserRepository
 {
+    private static self|null $instance = null;
+
+    final private function __construct()
+    {
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
 
     public function save(TeamUserEntity $teamUserEntity): Result|false
     {
@@ -24,7 +39,7 @@ class TeamUserRepository extends Singleton
         } else {
             return pg_query_params(
                 self::getConnection(),
-                "INSERT INTO team_user(user_id, team_id, role) VALUES ($1, $2, $3)",
+                "INSERT INTO team_user(user_id, team_id, role) VALUES ($1, $2, $3) RETURNING id",
                 array(
                     $teamUserEntity->getUserId(),
                     $teamUserEntity->getTeamId(),
@@ -57,6 +72,24 @@ class TeamUserRepository extends Singleton
             self::getConnection(),
             "DELETE FROM team_user WHERE id = $1",
             array($id)
+        );
+    }
+
+    public function fetchAllTeamsByUserId($userId): Result|false
+    {
+        return pg_query_params(
+            self::getConnection(),
+            "SELECT team_id FROM team_user WHERE user_id = $1",
+            array($userId)
+        );
+    }
+
+    public function fetchAllUsersByTeamId($teamId): Result|false
+    {
+        return pg_query_params(
+            self::getConnection(),
+            "SELECT user_id FROM team_user WHERE team_id = $1",
+            array($teamId)
         );
     }
 

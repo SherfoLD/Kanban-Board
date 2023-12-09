@@ -1,8 +1,9 @@
 <?php
-require_once "../data/repositories/UserRepository.php";
-require_once "../data/repositories/LoginDataRepository.php";
-require_once "../data/entities/UserEntity.php";
-require_once "../data/entities/LoginDataEntity.php";
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/data/repositories/UserRepository.php";
+require_once "$root/data/repositories/LoginDataRepository.php";
+require_once "$root/data/entities/UserEntity.php";
+require_once "$root/data/entities/LoginDataEntity.php";
 
 $userRepository = UserRepository::getInstance();
 $loginDataRepository = LoginDataRepository::getInstance();
@@ -13,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = $_POST['first_name'];
     $lastName = $_POST['last_name'];
     $createdAt = (new DateTime("now", new DateTimeZone('Europe/Moscow')))
-        ->format('Y-m-d H:i:s.uP');;
+        ->format('Y-m-d H:i:s.uP');
 
     $result = $userRepository->save(
         new UserEntity(
@@ -33,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'last_name' => $lastName,
         ];
 
-        header('Location: ../kanban/authorization/register.php?error=' . urlencode($errorMessage) . '&' . http_build_query($formData));
+        header('Location: /kanban/authorization/register.php?error=' . urlencode($errorMessage) . '&' . http_build_query($formData));
         exit();
     }
 
@@ -50,6 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_start();
     $_SESSION['user_id'] = $userId;
 
-    header('Location: ../../kanban/teams/team.php');
+    header('Location: /kanban/teams/team.php');
     exit();
 }

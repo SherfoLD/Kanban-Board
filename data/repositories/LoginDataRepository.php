@@ -1,12 +1,27 @@
 <?php
-require_once "../data/DatabaseConnection.php";
-require_once "../data/Singleton.php";
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/data/DatabaseConnection.php";
+require_once "$root/data/entities/LoginDataEntity.php";
 
 use PgSql\Result;
 use PgSql\Connection;
 
-class LoginDataRepository extends Singleton
+class LoginDataRepository
 {
+    private static self|null $instance = null;
+
+    final private function __construct()
+    {
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
 
     public function save(LoginDataEntity $loginDataEntity): Result|false
     {
@@ -25,7 +40,7 @@ class LoginDataRepository extends Singleton
         } else {
             return pg_query_params(
                 self::getConnection(),
-                "INSERT INTO login_data(user_id, email, \"password\") VALUES ($1, $2, $3)",
+                "INSERT INTO login_data(user_id, email, \"password\") VALUES ($1, $2, $3) RETURNING id",
                 array(
                     $loginDataEntity->getUserId(),
                     $loginDataEntity->getEmail(),

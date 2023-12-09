@@ -1,12 +1,27 @@
 <?php
-require_once "../data/DatabaseConnection.php";
-require_once "../data/Singleton.php";
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/data/DatabaseConnection.php";
+require_once "$root/data/entities/CardEntity.php";
 
 use PgSql\Result;
 use PgSql\Connection;
 
-class CardRepository extends Singleton
+class CardRepository
 {
+    private static self|null $instance = null;
+
+    final private function __construct()
+    {
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
 
     public function save(CardEntity $cardEntity): Result|false
     {
@@ -27,7 +42,7 @@ class CardRepository extends Singleton
         } else {
             return pg_query_params(
                 self::getConnection(),
-                "INSERT INTO card(list_id, name, position, created_by, created_at) VALUES ($1, $2, $3, $4, $5)",
+                "INSERT INTO card(list_id, name, position, created_by, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
                 array(
                     $cardEntity->getListId(),
                     $cardEntity->getName(),

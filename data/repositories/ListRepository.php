@@ -1,12 +1,27 @@
 <?php
-require_once "../data/DatabaseConnection.php";
-require_once "../data/Singleton.php";
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/data/DatabaseConnection.php";
+require_once "$root/data/entities/ListEntity.php";
 
 use PgSql\Result;
 use PgSql\Connection;
 
-class ListRepository extends Singleton
+class ListRepository
 {
+    private static self|null $instance = null;
+
+    final private function __construct()
+    {
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
 
     public function save(ListEntity $listEntity): Result|false
     {
@@ -26,7 +41,7 @@ class ListRepository extends Singleton
         } else {
             return pg_query_params(
                 self::getConnection(),
-                "INSERT INTO list(board_id, name, position, created_by, created_at) VALUES ($1, $2, $3, $4, $5)",
+                "INSERT INTO list(board_id, name, position, created_by, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
                 array(
                     $listEntity->getBoardId(),
                     $listEntity->getName(),

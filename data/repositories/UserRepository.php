@@ -1,12 +1,27 @@
 <?php
-require_once "../data/DatabaseConnection.php";
-require_once "../data/Singleton.php";
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/data/DatabaseConnection.php";
+require_once "$root/data/entities/UserEntity.php";
 
 use PgSql\Result;
 use PgSql\Connection;
 
-class UserRepository extends Singleton
+class UserRepository
 {
+    private static self|null $instance = null;
+
+    final private function __construct()
+    {
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
 
     public function save(UserEntity $userEntity): Result|false
     {
@@ -37,13 +52,16 @@ class UserRepository extends Singleton
         }
     }
 
-    public function findById($id): UserEntity
+    public function findById($id): UserEntity|false
     {
         $result = pg_query_params(
             self::getConnection(),
             "SELECT email, first_name, last_name, created_at FROM \"user\" WHERE id = $1",
             array($id)
         );
+        if(!$result)
+            return false;
+
         $userData = pg_fetch_assoc($result);
 
         return new UserEntity(
