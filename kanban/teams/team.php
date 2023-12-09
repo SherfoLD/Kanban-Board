@@ -13,7 +13,7 @@ require_once "$root/data/repositories/BoardRepository.php";
 
 function printAllTeams(): void
 {
-    echo '<p> <a href="create.php">Create team</a></p>';
+    echo '<div class="team-tile"><a href="create.php">Create team</a></div><br>';
 
     $teamUserRepository = TeamUserRepository::getInstance();
     $teamRepository = TeamRepository::getInstance();
@@ -24,6 +24,7 @@ function printAllTeams(): void
     foreach ($array as $subArray)
         $teamIds[] = $subArray[0];
 
+    echo '<h4>Teams you in:</h4>';
     foreach ($teamIds as $teamId) {
         $teamName = $teamRepository->findById($teamId)->getName();
 
@@ -46,7 +47,7 @@ function printTeamUsersOverview($team_id): void
     foreach ($array as $subArray)
         $userIds[] = $subArray[0];
 
-    echo 'Users in team:<br>';
+    echo '<h4>Users in the team:</h4>';
     foreach ($userIds as $userId) {
         $user = $userRepository->findById($userId);
         $firstName = $user->getFirstName();
@@ -72,7 +73,7 @@ function addTeamUserAddForm($team_id): void
 
 function printAllBoards($team_id): void
 {
-    echo '<div><a href="boards/create.php?team=' . $team_id . '">Create a board for the team</a></div>';
+    echo '<div class="board-tile"><a href="boards/create.php?team=' . $team_id . '">Create a board for the team</a></div><br>';
 
     $boardRepository = BoardRepository::getInstance();
     $result = $boardRepository->fetchAllBoardsTeamId($team_id);
@@ -82,7 +83,7 @@ function printAllBoards($team_id): void
     foreach ($array as $subArray)
         $boardIds[] = $subArray[0];
 
-    echo 'Available boards:<br>';
+    echo '<h4>Available boards:</h4>';
     foreach ($boardIds as $boardId) {
         $board = $boardRepository->findById($boardId);
         $boardName = $board->getName();

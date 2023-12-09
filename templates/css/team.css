@@ -21,6 +21,8 @@ body {
 
 main {
     flex: 1;
+    margin-left: 20px; /* Set left margin */
+    margin-right: 20px; /* Set right margin */
 }
 
 .columns {

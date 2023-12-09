@@ -24,6 +24,7 @@ $lastName = $userEntity->getLastName();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/templates/css/styles.css">
     <link rel="stylesheet" href="/templates/css/header.css">
     <link rel="stylesheet" href="/templates/css/footer.css">
     <link rel="stylesheet" href="/templates/css/team.css">
