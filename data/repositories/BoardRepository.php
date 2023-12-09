@@ -50,6 +50,15 @@ class BoardRepository
         }
     }
 
+    public function fetchAllBoardsTeamId($teamId): Result|false
+    {
+        return pg_query_params(
+            self::getConnection(),
+            "SELECT id FROM board WHERE team_id = $1",
+            array($teamId)
+        );
+    }
+
     public function findById($id): BoardEntity
     {
         $result = pg_query_params(

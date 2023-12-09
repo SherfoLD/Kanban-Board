@@ -1,7 +1,15 @@
+<?php include '../../templates/authorization_header.php'; ?>
+
+<?php if (isset($_GET['error'])) {
+    echo '<p style="color: red;">' . $_GET['error'] . '</p>';
+}
+
+$emailValue = $_GET['email'] ?? '';
+?>
 
 <form method="post" action="../../handlers/LoginHandler.php">
     <label for="username">Email:</label>
-    <input type="text" name="email" required><br>
+    <input type="text" name="email" value="<?= $emailValue ?>" required><br>
 
     <label for="password">Password:</label>
     <input type="password" name="password" required><br>

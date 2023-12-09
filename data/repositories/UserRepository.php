@@ -73,6 +73,29 @@ class UserRepository
         );
     }
 
+    public function findByEmail($email): UserEntity|false
+    {
+        $result = pg_query_params(
+            self::getConnection(),
+            "SELECT id, first_name, last_name, created_at FROM \"user\" WHERE email = $1",
+            array($email)
+        );
+        if(!$result)
+            return false;
+
+        $userData = pg_fetch_assoc($result);
+        if ($userData == null)
+            return false;
+
+        return new UserEntity(
+            $userData['id'],
+            $email,
+            $userData['first_name'],
+            $userData['last_name'],
+            $userData['created_at']
+        );
+    }
+
     public function deleteById($id): Result|false
     {
         return pg_query_params(
