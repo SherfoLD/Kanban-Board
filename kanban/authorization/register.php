@@ -9,7 +9,7 @@ $firstNameValue = $_GET['first_name'] ?? '';
 $lastNameValue = $_GET['last_name'] ?? '';
 ?>
 
-<form method="post" action="../../handlers/RegisterHandler.php">
+<form class="useful-from" method="post" action="/handlers/RegisterHandler.php">
     <label for="username">Email:</label>
     <input type="text" name="email" value="<?= $emailValue ?>" required><br>
 

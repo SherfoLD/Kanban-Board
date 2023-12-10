@@ -7,7 +7,7 @@
 $emailValue = $_GET['email'] ?? '';
 ?>
 
-<form method="post" action="../../handlers/LoginHandler.php">
+<form class="useful-from" method="post" action="/handlers/LoginHandler.php">
     <label for="username">Email:</label>
     <input type="text" name="email" value="<?= $emailValue ?>" required><br>
 

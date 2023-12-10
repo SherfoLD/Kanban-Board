@@ -37,18 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     header('Location: /kanban/teams/team.php?team=' . $teamId);
     exit();
 
-} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isset($_POST['team_id'])) {
     $email = $_POST['email'];
-    $teamId =  $_POST['team_id'];
+    $teamId = $_POST['team_id'];
 
-    $user = $userRepository -> findByEmail($email);
-    echo $user;
+    $user = $userRepository->findByEmail($email);
     if (!$user) {
         header('Location: /kanban/teams/team.php?team=' . $teamId . '&error=' . urlencode("User with this email was not found"));
         exit();
     }
 
-    $result = $teamUserRepository ->save(
+    $result = $teamUserRepository->save(
         new TeamUserEntity(
             null,
             $user->getId(),
@@ -59,4 +58,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
 
     header('Location: /kanban/teams/team.php?team=' . $teamId);
     exit();
+
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['team_user_id'])) {
+    $teamUserRepository->deleteById($_POST['team_user_id']);
+
+    header('Location:' . $_SERVER['HTTP_REFERER']);
+    exit();
 }
+

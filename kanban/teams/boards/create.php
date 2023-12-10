@@ -1,6 +1,6 @@
 <?php include '../../../templates/header.php'; ?>
 
-<form method="post" action="/handlers/BoardHandler.php">
+<form class="useful-from" method="post" action="/handlers/BoardHandler.php">
     <label for="username">Board name:</label>
     <input type="text" name="name" required><br>
 

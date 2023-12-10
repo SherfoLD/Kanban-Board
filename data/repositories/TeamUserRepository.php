@@ -66,6 +66,23 @@ class TeamUserRepository
         );
     }
 
+    public function findByTeamIdAndUserId($teamId, $userId): TeamUserEntity
+    {
+        $result = pg_query_params(
+            self::getConnection(),
+            "SELECT id, role FROM team_user WHERE team_id = $1 AND user_id = $2",
+            array($teamId, $userId)
+        );
+        $teamUserData = pg_fetch_assoc($result);
+
+        return new TeamUserEntity(
+            $teamUserData['id'],
+            $userId,
+            $userId,
+            $teamUserData['role']
+        );
+    }
+
     public function deleteById($id): Result|false
     {
         return pg_query_params(
