@@ -54,6 +54,19 @@ class CardRepository
         }
     }
 
+    public function findLastPositionByListId($listId): int
+    {
+        $query = pg_query_params(
+            self::getConnection(),
+            "SELECT position FROM card WHERE list_id = $1 ORDER BY position DESC LIMIT 1 ",
+            array($listId)
+        );
+
+        $result = pg_fetch_all($query);
+
+        return $result == null ? 0 : $result[0]['position'];
+    }
+
     public function findById($id): CardEntity
     {
         $result = pg_query_params(

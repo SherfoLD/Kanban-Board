@@ -53,7 +53,7 @@ class ListRepository
         }
     }
 
-    public function findById($id) : ListEntity
+    public function findById($id): ListEntity
     {
         $result = pg_query_params(
             self::getConnection(),
@@ -79,6 +79,19 @@ class ListRepository
             "SELECT id, name, created_by FROM list WHERE board_id = $1 ORDER BY position",
             array($boardId)
         );
+    }
+
+    public function findLastPositionByBoardId($boardId): int
+    {
+        $query = pg_query_params(
+            self::getConnection(),
+            "SELECT position FROM list WHERE board_id = $1 ORDER BY position DESC LIMIT 1 ",
+            array($boardId)
+        );
+
+        $result = pg_fetch_all($query);
+
+        return $result == null ? 0 : $result[0]['position'];
     }
 
     public function deleteById($id): Result|false
