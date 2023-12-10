@@ -1,0 +1,25 @@
+.kanban-board {
+    display: flex;
+    padding: 20px;
+}
+
+.list {
+    width: 250px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.card.editable {
+    background-color: #e0e0e0;
+}

@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_PO
 
     $boardId = pg_fetch_assoc($result)["id"];
 
-    header('Location: /kanban/teams/boards/board.php?board=' . $boardId);
+    header('Location: /kanban/teams/boards/board.php?board=' . $boardId . '&team=' . $teamId);
     exit();
 
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['board_id'])) {

@@ -102,7 +102,7 @@ function printAllBoards($teamId): void
         $board = $boardRepository->findById($boardId);
         $boardName = $board->getName();
 
-        echo '<div class="board-tile"><a href="boards/board.php?board=' . $boardId . '">' . $boardName . '</a>';
+        echo '<div class="board-tile"><a href="boards/board.php?board=' . $boardId . '&team=' . $teamId . '">' . $boardName . '</a>';
         if ($teamUser->getRole() < 3)
             echo '<form method="post" action="/handlers/BoardHandler.php">
                     <input type="hidden" name="board_id" value="' . $boardId . '" required/>

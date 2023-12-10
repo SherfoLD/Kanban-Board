@@ -72,6 +72,15 @@ class ListRepository
         );
     }
 
+    public function fetchAllByBoardId($boardId): Result|false
+    {
+        return pg_query_params(
+            self::getConnection(),
+            "SELECT id, name, created_by FROM list WHERE board_id = $1 ORDER BY position",
+            array($boardId)
+        );
+    }
+
     public function deleteById($id): Result|false
     {
         return pg_query_params(

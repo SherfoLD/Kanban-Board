@@ -73,6 +73,15 @@ class CardRepository
         );
     }
 
+    public function fetchAllByListId($listId): Result|false
+    {
+        return pg_query_params(
+            self::getConnection(),
+            "SELECT id, name, created_by FROM card WHERE list_id = $1 ORDER BY position",
+            array($listId)
+        );
+    }
+
     public function deleteById($id): Result|false
     {
         return pg_query_params(
