@@ -7,14 +7,14 @@
 $emailValue = $_GET['email'] ?? '';
 ?>
 
-<form class="useful-from" method="post" action="/handlers/LoginHandler.php">
+<form class="fancy-form" method="post" action="/handlers/LoginHandler.php">
     <label for="username">Email:</label>
-    <input type="text" name="email" value="<?= $emailValue ?>" required><br>
+    <input class="fancy-input" type="text" name="email" value="<?= $emailValue ?>" required><br>
 
     <label for="password">Password:</label>
-    <input type="password" name="password" required><br>
+    <input class="fancy-input" type="password" name="password" required><br>
 
-    <button type="submit">Login</button>
+    <button class="fancy-button" type="submit">Login</button>
 </form>
 
 <p>Don't have an account? <a href="register.php">Register here</a></p>

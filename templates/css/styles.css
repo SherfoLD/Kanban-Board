@@ -1,10 +1,15 @@
-.useful-from {
+.fancy-form {
     max-width: 400px;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+}
+
+.fancy-input {
+    width: 100%;
+    margin-bottom: 16px;
 }
 
 label {
@@ -14,19 +19,23 @@ label {
 }
 
 input {
-    width: 100%;
-    padding: 10px; /* Increased padding for better readability */
-    margin-bottom: 16px;
+    width: 80%;
+    padding: 10px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 16px; /* Increased font size for better readability */
+    font-size: 16px;
+}
+
+.fancy-button {
+    padding: 10px 15px;
+    margin-left: 0px;
 }
 
 button {
     background-color: #333;
     color: #fff;
-    padding: 10px 15px;
+    margin-left: 3px;
     border: none;
     border-radius: 4px;
     cursor: pointer;

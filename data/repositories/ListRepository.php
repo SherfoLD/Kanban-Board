@@ -94,6 +94,28 @@ class ListRepository
         return $result == null ? 0 : $result[0]['position'];
     }
 
+    public function findByBoardIdAndPosition($boardId, $position): ListEntity|false
+    {
+        $query = pg_query_params(
+            self::getConnection(),
+            "SELECT id, name, created_by, created_at FROM list WHERE board_id = $1 AND position = $2",
+            array($boardId, $position)
+        );
+
+        $listData = pg_fetch_assoc($query);
+        if (!$listData)
+            return false;
+
+        return new ListEntity(
+            $listData['id'],
+            $boardId,
+            $listData['name'],
+            $position,
+            $listData['created_by'],
+            $listData['created_at']
+        );
+    }
+
     public function deleteById($id): Result|false
     {
         return pg_query_params(

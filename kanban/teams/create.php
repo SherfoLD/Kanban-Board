@@ -1,6 +1,6 @@
 <?php include '../../templates/header.php'; ?>
 
-<form class="useful-from" method="post" action="/handlers/TeamHandler.php">
+<form class="fancy-form" method="post" action="/handlers/TeamHandler.php">
     <label for="username">Team name:</label>
     <input type="text" name="name" required><br>
 

@@ -72,7 +72,7 @@ function addTeamUserAddForm($teamId): void
     $teamUser = $teamUserRepository->findByTeamIdAndUserId($teamId, $_SESSION['user_id']);
     if ($teamUser->getRole() < 3)
         echo 'Add user to the team<br>
-            <form class="useful-from" method="post" action="/handlers/TeamHandler.php">
+            <form class="fancy-form" method="post" action="/handlers/TeamHandler.php">
                 <label for="email">User email:</label>
                 <input type="text" name="email" required>
                 
@@ -102,7 +102,7 @@ function printAllBoards($teamId): void
         $board = $boardRepository->findById($boardId);
         $boardName = $board->getName();
 
-        echo '<div class="board-tile"><a href="boards/board.php?board=' . $boardId . '&team=' . $teamId . '">' . $boardName . '</a>';
+        echo '<div class="board-tile"><a href="boards/board.php?board=' . $boardId . '">' . $boardName . '</a>';
         if ($teamUser->getRole() < 3)
             echo '<form method="post" action="/handlers/BoardHandler.php">
                     <input type="hidden" name="board_id" value="' . $boardId . '" required/>

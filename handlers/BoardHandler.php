@@ -8,20 +8,26 @@ require_once "$root/data/repositories/CardRepository.php";
 require_once "$root/data/entities/CardEntity.php";
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_POST['team_id'])) {
-    createBoard($_POST['name'], $_POST['team_id']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['board_name']) && isset($_POST['team_id'])) {
+    createBoard($_POST['board_name'], $_POST['team_id']);
 
-} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_POST['board_id']) && isset($_POST['created_by'])) {
-    createList($_POST['name'], $_POST['board_id'], $_POST['created_by']);
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['list_name']) && isset($_POST['board_id']) && isset($_POST['created_by'])) {
+    createList($_POST['list_name'], $_POST['board_id'], $_POST['created_by']);
 
-} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_POST['list_id']) && isset($_POST['created_by'])) {
-    createCard($_POST['name'], $_POST['list_id'], $_POST['created_by']);
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['card_name']) && isset($_POST['list_id']) && isset($_POST['created_by'])) {
+    createCard($_POST['card_name'], $_POST['list_id'], $_POST['created_by']);
 
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['list_id']) && isset($_POST['list_name'])) {
-    editList($_POST['list_name'], $_POST['list_id']);
+    editListName($_POST['list_name'], $_POST['list_id']);
 
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['card_id']) && isset($_POST['card_name'])) {
-    editCard($_POST['card_name'], $_POST['card_id']);
+    editCardName($_POST['card_name'], $_POST['card_id']);
+
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['card_id']) && isset($_POST['card_position_increment'])) {
+    editCardPosition($_POST['card_position_increment'], $_POST['card_id']);
+
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['list_id']) && isset($_POST['list_position_increment'])) {
+    editListPosition($_POST['list_position_increment'], $_POST['list_id']);
 
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['board_id'])) {
     deleteBoard($_POST['board_id']);
@@ -34,7 +40,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_PO
 }
 
 
-function editCard($cardName, $cardId) : void
+function editListPosition(int $listPositionIncrement, $listId): void
+{
+    $listRepository = ListRepository::getInstance();
+
+    $list = $listRepository->findById($listId);
+
+    $listToSwapWith = $listRepository->findByBoardIdAndPosition($list->getBoardId(),
+        $list->getPosition() + $listPositionIncrement);
+
+    $listRepository->save(
+        new ListEntity(
+            $listId,
+            $list->getBoardId(),
+            $list->getName(),
+            $list->getPosition() + $listPositionIncrement,
+            $list->getCreatedBy(),
+            $list->getCreatedAt()
+        )
+    );
+    if ($listToSwapWith)
+        $listRepository->save(
+            new ListEntity(
+                $listToSwapWith->getId(),
+                $listToSwapWith->getBoardId(),
+                $listToSwapWith->getName(),
+                $listToSwapWith->getPosition() - $listPositionIncrement,
+                $listToSwapWith->getCreatedBy(),
+                $listToSwapWith->getCreatedAt()
+            )
+        );
+
+    header('Location:' . $_SERVER['HTTP_REFERER']);
+    exit();
+}
+
+function editCardPosition(int $cardPositionIncrement, $cardId): void
+{
+    $cardRepository = CardRepository::getInstance();
+
+    $card = $cardRepository->findById($cardId);
+
+    $cardToSwapWith = $cardRepository->findByListIdAndPosition($card->getListId(),
+        $card->getPosition() + $cardPositionIncrement);
+
+    $cardRepository->save(
+        new CardEntity(
+            $cardId,
+            $card->getListId(),
+            $card->getName(),
+            $card->getPosition() + $cardPositionIncrement,
+            $card->getCreatedBy(),
+            $card->getCreatedAt()
+        )
+    );
+    if ($cardToSwapWith)
+        $cardRepository->save(
+            new CardEntity(
+                $cardToSwapWith->getId(),
+                $cardToSwapWith->getListId(),
+                $cardToSwapWith->getName(),
+                $cardToSwapWith->getPosition() - $cardPositionIncrement,
+                $cardToSwapWith->getCreatedBy(),
+                $cardToSwapWith->getCreatedAt()
+            )
+        );
+
+    header('Location:' . $_SERVER['HTTP_REFERER']);
+    exit();
+}
+
+function editCardName($cardName, $cardId): void
 {
     $cardRepository = CardRepository::getInstance();
 
@@ -55,7 +131,7 @@ function editCard($cardName, $cardId) : void
     exit();
 }
 
-function editList($listName, $listId) : void
+function editListName($listName, $listId): void
 {
     $listRepository = ListRepository::getInstance();
 
@@ -76,7 +152,7 @@ function editList($listName, $listId) : void
     exit();
 }
 
-function deleteList($listId) : void
+function deleteList($listId): void
 {
     $listRepository = ListRepository::getInstance();
 
@@ -87,7 +163,7 @@ function deleteList($listId) : void
 }
 
 
-function deleteCard($cardId) : void
+function deleteCard($cardId): void
 {
     $cardRepository = CardRepository::getInstance();
 
@@ -121,7 +197,7 @@ function createCard($name, $listId, $createdBy): void
 }
 
 
-function createList($name, $boardId, $createdBy) : void
+function createList($name, $boardId, $createdBy): void
 {
     $listRepository = ListRepository::getInstance();
 

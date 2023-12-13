@@ -13,13 +13,18 @@
 
 .card {
     background-color: #ffffff;
-    padding: 10px;
+    padding: 10px 10px 30px;
     margin: 5px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.card.editable {
-    background-color: #e0e0e0;
+.card.editable-card{
+    padding: 10px;
+}
+
+form {
+    display: -webkit-inline-flex;
+    margin-bottom: 10px;
 }

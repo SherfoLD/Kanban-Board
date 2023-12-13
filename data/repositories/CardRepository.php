@@ -67,6 +67,28 @@ class CardRepository
         return $result == null ? 0 : $result[0]['position'];
     }
 
+    public function findByListIdAndPosition($listId, $position): CardEntity|false
+    {
+        $query = pg_query_params(
+            self::getConnection(),
+            "SELECT id, name, created_by, created_at FROM card WHERE list_id = $1 AND position = $2",
+            array($listId, $position)
+        );
+
+        $cardData = pg_fetch_assoc($query);
+        if (!$cardData)
+            return false;
+
+        return new CardEntity(
+            $cardData['id'],
+            $listId,
+            $cardData['name'],
+            $position,
+            $cardData['created_by'],
+            $cardData['created_at']
+        );
+    }
+
     public function findById($id): CardEntity
     {
         $result = pg_query_params(
