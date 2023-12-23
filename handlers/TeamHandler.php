@@ -64,5 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
 
     header('Location:' . $_SERVER['HTTP_REFERER']);
     exit();
+
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['team_id'])) {
+    $teamRepository->deleteById($_POST['team_id']);
+
+    header('Location:' . $_SERVER['HTTP_REFERER']);
+    exit();
 }
 

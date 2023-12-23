@@ -7,6 +7,10 @@
     border-radius: 8px;
 }
 
+.button-on-the-right-from {
+    display: -webkit-inline-flex;
+}
+
 .fancy-input {
     width: 100%;
     margin-bottom: 16px;

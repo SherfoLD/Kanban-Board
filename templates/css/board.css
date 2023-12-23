@@ -24,7 +24,7 @@
     padding: 10px;
 }
 
-form {
+.small-form {
     display: -webkit-inline-flex;
     margin-bottom: 10px;
 }

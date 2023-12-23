@@ -22,22 +22,22 @@ $kanbanData = $boardController->getBoard();
                 <button onclick="toggleEdit()">Edit</button>
 
                 <?php if ($list['editable']): ?>
-                    <form method="post" action="/handlers/BoardHandler.php">
+                    <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                         <input class="display" type="text" name="list_name"
                                value="<?= htmlspecialchars($list['name']) ?>"/>
                         <input class="display" type="hidden" name="list_id" value="<?= $list['id'] ?>"/>
                         <button class="display" type="submit">Save</button>
                     </form>
-                    <form method="post" action="/handlers/BoardHandler.php">
+                    <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                         <input class="display" type="hidden" name="list_id" value="<?= $list['id'] ?>"/>
                         <button class="display" type="submit">Delete</button>
                     </form>
-                    <form method="post" action="/handlers/BoardHandler.php">
+                    <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                         <input class="display" type="hidden" name="list_id" value="<?= $list['id'] ?>"/>
                         <input class="display" type="hidden" name="list_position_increment" value="-1"/>
                         <button class="display" type="submit">Left</button>
                     </form>
-                    <form method="post" action="/handlers/BoardHandler.php">
+                    <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                         <input class="display" type="hidden" name="list_id" value="<?= $list['id'] ?>"/>
                         <input class="display" type="hidden" name="list_position_increment" value="1"/>
                         <button class="display" type="submit">Right</button>
@@ -52,22 +52,22 @@ $kanbanData = $boardController->getBoard();
                                 <div class="display-card"> <?= htmlspecialchars($item['name']) ?> </div>
                                 <div class="display-card"
                                      style="float: right"> <?= htmlspecialchars($item['created_by']) ?> </div>
-                                <form method="post" action="/handlers/BoardHandler.php">
+                                <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                                     <input class="display" type="text" name="card_name"
                                            value="<?= htmlspecialchars($item['name']) ?>"/>
                                     <input class="display" type="hidden" name="card_id" value="<?= $item['id'] ?>"/>
                                     <button class="display" type="submit">Save</button>
                                 </form>
-                                <form method="post" action="/handlers/BoardHandler.php">
+                                <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                                     <input class="display" type="hidden" name="card_id" value="<?= $item['id'] ?>"/>
                                     <button class="display" type="submit">Delete</button>
                                 </form>
-                                <form method="post" action="/handlers/BoardHandler.php">
+                                <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                                     <input class="display" type="hidden" name="card_id" value="<?= $item['id'] ?>"/>
                                     <input class="display" type="hidden" name="card_position_increment" value="1"/>
                                     <button class="display" type="submit">Down</button>
                                 </form>
-                                <form method="post" action="/handlers/BoardHandler.php">
+                                <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                                     <input class="display" type="hidden" name="card_id" value="<?= $item['id'] ?>"/>
                                     <input class="display" type="hidden" name="card_position_increment" value="-1"/>
                                     <button class="display" type="submit">Up</button>
@@ -84,7 +84,7 @@ $kanbanData = $boardController->getBoard();
                 <?php endforeach; ?>
 
                 <div class="card editable-card">
-                    <form method="post" action="/handlers/BoardHandler.php">
+                    <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                         <input type="text" name="card_name" placeholder="Card name" required/>
                         <input type="hidden" name="list_id" value="<?= $list['id'] ?>" required/>
                         <input type="hidden" name="created_by" value="<?= $teamUser->getId() ?>" required/>
@@ -95,7 +95,7 @@ $kanbanData = $boardController->getBoard();
         <?php endforeach; ?>
         <?php if ($kanbanData == null || $kanbanData[0]['editable']): ?>
             <div class="list">
-                <form method="post" action="/handlers/BoardHandler.php">
+                <form class="small-form" method="post" action="/handlers/BoardHandler.php">
                     <input type="text" name="list_name" placeholder="List name" required/>
                     <input type="hidden" name="board_id" value="<?= $_GET['board'] ?>" required/>
                     <input type="hidden" name="created_by" value="<?= $teamUser->getId() ?>" required/>

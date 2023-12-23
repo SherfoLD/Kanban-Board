@@ -27,8 +27,15 @@ function printAllTeams(): void
     echo '<h4>Teams you in:</h4>';
     foreach ($teamIds as $teamId) {
         $teamName = $teamRepository->findById($teamId)->getName();
+        $currentUser = $teamUserRepository->findByTeamIdAndUserId($teamId, $_SESSION["user_id"]);
 
-        echo '<div class="team-tile"><a href="team.php?team=' . $teamId . '">' . $teamName . '</a></div>';
+        echo '<div class="team-tile"><a href="team.php?team=' . $teamId . '">' . $teamName . '</a>';
+        if ($currentUser->getRole() < 3)
+            echo '<form class="button-on-the-right-from" method="post" action="/handlers/TeamHandler.php">
+                        <input type="hidden" name="team_id" value="' . $teamId . '" required/>
+                        <button type="submit" value="Delete">Delete</button>
+                    </form>';
+        echo '</div>';
     }
 
 }
@@ -57,7 +64,7 @@ function printTeamUsersOverview($teamId): void
         echo '<div class="user-card">' . $firstName . " " . $lastName;
         $currentUser = $teamUserRepository->findByTeamIdAndUserId($teamId, $userId);
         if ($thisUser->getRole() < $currentUser->getRole())
-            echo '<form method="post" action="/handlers/TeamHandler.php">
+            echo '<form class="button-on-the-right-from" method="post" action="/handlers/TeamHandler.php">
                     <input type="hidden" name="team_user_id" value="' . $currentUser->getId() . '" required/>
                     <button type="submit" value="Delete">Delete</button>
                 </form>';
@@ -72,7 +79,7 @@ function addTeamUserAddForm($teamId): void
     $teamUser = $teamUserRepository->findByTeamIdAndUserId($teamId, $_SESSION['user_id']);
     if ($teamUser->getRole() < 3)
         echo 'Add user to the team<br>
-            <form class="fancy-form" method="post" action="/handlers/TeamHandler.php">
+            <form class="fancy-form button-on-the-right-from" method="post" action="/handlers/TeamHandler.php">
                 <label for="email">User email:</label>
                 <input type="text" name="email" required>
                 
@@ -104,7 +111,7 @@ function printAllBoards($teamId): void
 
         echo '<div class="board-tile"><a href="boards/board.php?board=' . $boardId . '">' . $boardName . '</a>';
         if ($teamUser->getRole() < 3)
-            echo '<form method="post" action="/handlers/BoardHandler.php">
+            echo '<form class="button-on-the-right-from" method="post" action="/handlers/BoardHandler.php">
                     <input type="hidden" name="board_id" value="' . $boardId . '" required/>
                     <button type="submit" value="Delete">Delete</button>
                 </form>';

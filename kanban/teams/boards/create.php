@@ -6,7 +6,7 @@
 
     <input type="hidden" name="team_id" value="<?= $_GET['team']?>" required>
 
-    <button type="submit">Create board</button>
+    <button class="fancy-button" type="submit">Create board</button>
 </form>
 
 <?php include '../../../templates/footer.php'; ?>
