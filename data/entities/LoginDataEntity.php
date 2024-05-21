@@ -6,13 +6,15 @@ class LoginDataEntity
     private $userId;
     private $email;
     private $password;
+    private $blocked;
 
-    public function __construct($id, $userId, $email, $password)
+    public function __construct($id, $userId, $email, $password, $blocked)
     {
         $this->id = $id;
         $this->userId = $userId;
         $this->email = $email;
         $this->password = $password;
+        $this->blocked = $blocked;
     }
 
     public function getId()
@@ -33,6 +35,11 @@ class LoginDataEntity
     public function getPassword()
     {
         return $this->password;
+    }
+
+    public function getBlocked()
+    {
+        return $this->blocked;
     }
 }
 

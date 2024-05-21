@@ -63,11 +63,22 @@ function printTeamUsersOverview($teamId): void
 
         echo '<div class="user-card">' . $firstName . " " . $lastName;
         $currentUser = $teamUserRepository->findByTeamIdAndUserId($teamId, $userId);
-        if ($thisUser->getRole() < $currentUser->getRole())
+        if ($thisUser->getRole() < $currentUser->getRole()) {
             echo '<form class="button-on-the-right-from" method="post" action="/handlers/TeamHandler.php">
                     <input type="hidden" name="team_user_id" value="' . $currentUser->getId() . '" required/>
                     <button type="submit" value="Delete">Delete</button>
                 </form>';
+            echo '<form class="button-on-the-right-from" method="post" action="/handlers/LoginHandler.php">
+                    <input type="hidden" name="user_id" value="' . $currentUser->getUserId() . '" required/>
+                    <input type="hidden" name="action" value="block" required/>
+                    <button type="submit" value="Block">Block</button>
+                </form>';
+            echo '<form class="button-on-the-right-from" method="post" action="/handlers/LoginHandler.php">
+                    <input type="hidden" name="user_id" value="' . $currentUser->getUserId() . '" required/>
+                    <input type="hidden" name="action" value="unblock" required/>
+                    <button type="submit" value="Block">Unblock</button>
+                </form>';
+        }
         echo '</div>';
     }
 

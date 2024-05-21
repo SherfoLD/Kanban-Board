@@ -127,7 +127,7 @@ $kanbanData = $boardController->getBoard();
     </script>
 
     <pre>
-        <?php print_r($kanbanData) ?>
+<!--        --><?php //print_r($kanbanData) ?>
     </pre>
 
 <?php include '../../../templates/footer.php' ?>

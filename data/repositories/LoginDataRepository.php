@@ -28,11 +28,12 @@ class LoginDataRepository
         if ($loginDataEntity->getId() != null) {
             return pg_query_params(
                 self::getConnection(),
-                "UPDATE login_data SET user_id = $1, email = $2, \"password\" = $3 WHERE id = $4",
+                "UPDATE login_data SET user_id = $1, email = $2, \"password\" = $3, blocked = $4 WHERE id = $5",
                 array(
                     $loginDataEntity->getUserId(),
                     $loginDataEntity->getEmail(),
                     $loginDataEntity->getPassword(),
+                    $loginDataEntity->getBlocked(),
                     $loginDataEntity->getId()
                 )
             );
@@ -40,11 +41,12 @@ class LoginDataRepository
         } else {
             return pg_query_params(
                 self::getConnection(),
-                "INSERT INTO login_data(user_id, email, \"password\") VALUES ($1, $2, $3) RETURNING id",
+                "INSERT INTO login_data(user_id, email, \"password\", blocked) VALUES ($1, $2, $3, $4) RETURNING id",
                 array(
                     $loginDataEntity->getUserId(),
                     $loginDataEntity->getEmail(),
-                    $loginDataEntity->getPassword()
+                    $loginDataEntity->getPassword(),
+                    $loginDataEntity->getBlocked()
                 )
             );
         }
@@ -63,8 +65,24 @@ class LoginDataRepository
             $id,
             $loginData['user_id'],
             $loginData['email'],
-            $loginData['password']
+            $loginData['password'],
+            $loginData['blocked']
         );
+    }
+
+    public function isUserBlockedByUserId($userId) : bool
+    {
+        $result = pg_query_params(
+            self::getConnection(),
+            "SELECT blocked FROM login_data WHERE user_id = $1",
+            array($userId)
+        );
+        if (!$result)
+            return true;
+
+        $loginData = pg_fetch_assoc($result);
+
+        return $loginData['blocked'] == 1;
     }
 
     public function findUserByEmailAndPassword($email, $password)
@@ -80,6 +98,24 @@ class LoginDataRepository
         $loginData = pg_fetch_assoc($result);
 
         return $loginData['user_id'];
+    }
+
+    public function findByUserId($userId): LoginDataEntity
+    {
+        $result = pg_query_params(
+            self::getConnection(),
+            "SELECT id, email, \"password\", blocked FROM login_data WHERE user_id = $1",
+            array($userId)
+        );
+        $loginData = pg_fetch_assoc($result);
+
+        return new LoginDataEntity(
+            $loginData['id'],
+            $userId,
+            $loginData['email'],
+            $loginData['password'],
+            $loginData['blocked']
+        );
     }
 
     public function deleteById($id): Result|false
